@@ -1,0 +1,92 @@
+datasource postgres {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "debian-openssl-1.1.x"]
+  previewFeatures = ["filterJson", "referentialActions"]
+}
+
+model TestItem {
+  id   String @id
+  col1 String
+  col2 Int
+
+  col3  String
+  col4  String
+  col5  String
+  col6  String
+  col7  String
+  col8  String @default("unknown")
+  col9  String @default("unknown")
+  col10 String
+  col11 String
+  col12 String
+  col13 String @default("unknown")
+  col14 String @default("unknown")
+  col15 String
+  col16 String
+  col17 String
+  col18 String
+  col19 String
+  col20 String
+  col21 String
+
+  col22 Boolean @default(true)
+  col23 Boolean @default(true)
+  col24 Boolean @default(false)
+  col25 Boolean @default(false)
+  col26 Boolean @default(false)
+
+  raw Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Markets  TestMarket[]
+  Patterns TestPattern[]
+
+
+  @@unique([col1, col2])
+}
+
+model TestPattern {
+  id String @id
+
+  fk1  String
+  col1 String
+
+  col4 String
+  col5 String
+  col6 String
+  col7 Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Item    TestItem     @relation(fields: [fk1], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Markets TestMarket[]
+
+  @@unique([fk1, col1])
+}
+
+model TestMarket {
+  id String @id
+
+  fk1  String
+  fk2  String?
+  col1 String
+
+  col5 String
+  col6 String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Item    TestItem     @relation(fields: [fk1], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Pattern TestPattern? @relation(fields: [fk2], references: [id])
+
+  @@unique([fk1, fk2, col1])
+}
